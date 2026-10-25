@@ -1,0 +1,42 @@
+{
+  "name": "moonlit-courier",
+  "version": "1.0.0",
+  "description": "A pixel-art endless runner through a moonlit canyon.",
+  "private": true,
+  "main": "electron/main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "dist:win": "electron-builder --win portable --x64"
+  },
+  "devDependencies": {
+    "electron": "^45.0.0",
+    "electron-builder": "^26.18.0"
+  },
+  "build": {
+    "appId": "com.moonlitcourier.game",
+    "productName": "Moonlit Courier",
+    "asar": true,
+    "files": [
+      "electron/main.cjs",
+      "index.html",
+      "style.css",
+      "game.js",
+      "package.json"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ],
+      "artifactName": "${productName}-${version}-Windows-Portable.${ext}"
+    },
+    "portable": {
+      "artifactName": "${productName}-${version}-Windows-Portable.${ext}"
+    }
+  }
+}
