@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#171b35">
+  <title>Moonlit Courier — Pixel Runner</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Moonlit Courier home">
+        <span class="brand-mark" aria-hidden="true">✦</span>
+        <span>MOONLIT <b>COURIER</b></span>
+      </a>
+      <div class="hud" aria-label="Run statistics">
+        <div class="stat"><span class="stat-label">DISTANCE</span><span id="score">00000</span></div>
+        <div class="stat best"><span class="stat-label">PERSONAL BEST</span><span id="best">00000</span></div>
+      </div>
+    </header>
+
+    <section class="game-frame" aria-label="Endless runner game">
+      <canvas id="game" width="960" height="360" aria-label="A tiny robot runs through a moonlit alien canyon. Press Space to jump over the crystals." role="img"></canvas>
+      <div class="screen" id="screen">
+        <div class="screen-card">
+          <div class="screen-icon" id="screen-icon" aria-hidden="true">✦</div>
+          <p class="eyebrow" id="eyebrow">NIGHT SHIFT · ROUTE 07</p>
+          <h1 id="screen-title">The long way home</h1>
+          <p class="screen-copy" id="screen-copy">Guide Pip through the moon garden. The path gets quicker the farther you travel.</p>
+          <button id="action-button" type="button">Start the run <span aria-hidden="true">→</span></button>
+          <p class="key-hint">PRESS <kbd>SPACE</kbd> TO JUMP</p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span><i class="legend-dot"></i> A tiny courier, a very long route.</span>
+      <span class="controls"><kbd>SPACE</kbd> / <kbd>↑</kbd> jump <span class="divider">·</span> hold <kbd>↓</kbd> to duck / drop</span>
+    </footer>
+  </main>
+  <script src="game.js"></script>
+</body>
+</html>
