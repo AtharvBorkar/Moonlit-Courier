@@ -2,7 +2,6 @@
 
 **A tiny robot, a moonlit canyon, and an endlessly long delivery route.** Moonlit Courier is a lightweight, browser-based endless runner made with plain HTML, CSS, and JavaScript. Guide Pip past glowing crystals, old relay towers, and flying moon-moth drones as the route gets faster.
 
-> **Suggested GitHub description:** A vanilla JavaScript pixel-art endless runner. Jump, duck, and dodge moon-moth drones across a moonlit canyon.
 
 ## Features
 
