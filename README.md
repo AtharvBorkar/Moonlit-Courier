@@ -18,7 +18,8 @@
 - **Collision and restart:** A collision ends the run. Restart from the overlay or press Space to begin another run.
 - **Score and personal best:** Distance is converted into a score, and the best score is saved in browser `localStorage`.
 - **Original visuals:** Pip, the drones, crystals, relay towers, moon, stars, and canyon are drawn from original pixel-style shapes—no Chrome Dinosaur assets are used.
-- **Responsive presentation:** The game canvas scales to fit the page, with keyboard and pointer controls.
+- **Responsive, phone-ready play:** The canvas scales to landscape and portrait screens; touch controls, safe-area spacing, and browser-gesture suppression are included.
+- **Installable PWA:** A web app manifest, original pixel-art icons, and a service worker cache the game shell for offline browser play.
 
 ## Play
 
@@ -30,7 +31,7 @@ python -m http.server 8000
 
 Then visit <http://localhost:8000>.
 
-The browser edition requires no build step or external art assets. The Windows desktop edition packages its own Electron/Chromium runtime and game files, so players do not need Chrome, a browser, or a separate runtime installed.
+The browser edition requires no build step or external art assets. To install the PWA, publish it to HTTPS (or use localhost during development), open it once while online so the service worker can cache the game shell, then choose the browser's **Install app** or **Add to Home Screen** option. It will launch in a standalone window and work offline after its first visit. Opening `index.html` directly still works, but browsers do not allow service-worker installation from `file://`. The Windows desktop edition packages its own Electron/Chromium runtime and game files, so players do not need Chrome, a browser, or a separate runtime installed.
 
 ## Windows desktop application
 
@@ -66,7 +67,8 @@ npm start
 | **Space**, **↑**, or **W** | Jump; Space also starts/restarts a run |
 | Hold **↓** or **S** on the ground | Duck under middle-height drones |
 | Press **↓** or **S** in the air | Quick-drop toward the ground |
-| Click/tap the game | Start or jump |
+| Tap the right half of the screen | Jump or start a run |
+| Hold the lower-left screen area or the **DUCK** button | Duck on the ground; quick-drop in the air |
 | Start/restart button | Begin a fresh run |
 
 ## Gameplay details
@@ -89,17 +91,22 @@ The game uses axis-aligned rectangle overlap checks. Pip’s grounded duck pose 
 
 ```text
 .
-├── index.html   # Page markup, HUD, game canvas, and start/game-over overlay
-├── style.css    # Responsive layout, colors, typography, and interface styling
-├── game.js          # Game loop, input, physics, spawning, collision, and canvas art
+├── index.html          # Page markup, HUD, canvas, and start/game-over overlay
+├── style.css           # Responsive layout, colors, and interface styling
+├── game.js             # Game loop, input, physics, collision, and canvas art
+├── manifest.json       # PWA name, theme, display mode, and icons
+├── service-worker.js   # Offline app-shell cache
+├── icons/
+│   ├── icon-192.png    # Original pixel-art install icon
+│   └── icon-512.png    # Original pixel-art install icon
 ├── electron/
-│   └── main.cjs      # Secure desktop window and application lifecycle
-├── package.json      # Electron development and Windows packaging scripts
-├── .gitignore        # Excludes build output and installed dependencies
-└── README.md         # Project guide
+│   └── main.cjs        # Secure desktop window and application lifecycle
+├── package.json        # Electron development and Windows packaging scripts
+├── .gitignore          # Excludes build output and installed dependencies
+└── README.md            # Project guide
 ```
 
-The canvas uses a fixed logical resolution of **960 × 360** and is scaled by CSS. All game art is drawn in `game.js` with canvas shapes, preserving crisp pixel edges without image downloads.
+The canvas uses a fixed logical resolution of **960 × 360** and is scaled to fit the available screen area, including phone portrait and landscape layouts. Landscape is preferred for the widest view. On touch devices, tap the right half to jump and hold the lower-left area or the on-screen **DUCK** button to duck. All game art is drawn in `game.js` with canvas shapes, preserving crisp pixel edges without image downloads.
 
 ## Tuning the game
 
@@ -119,6 +126,7 @@ The best score is stored under `moonlit-courier-best-v1` in `localStorage`. Clea
 - CSS
 - Vanilla JavaScript
 - Canvas 2D API
+- Web App Manifest and Service Worker (installable offline PWA)
 - Electron (Windows desktop wrapper and bundled Chromium runtime)
 
 There is no server-side component. The local server command above is optional and is only useful when you prefer to run the browser edition over HTTP. The packaged desktop app renders the same local HTML/CSS/JavaScript game and runs offline.
