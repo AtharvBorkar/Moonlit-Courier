@@ -1,6 +1,7 @@
 # Moonlit Courier
 
-**A tiny robot, a moonlit canyon, and an endlessly long delivery route.** Moonlit Courier is a lightweight, browser-based endless runner made with plain HTML, CSS, and JavaScript. Guide Pip past glowing crystals, old relay towers, and flying moon-moth drones as the route gets faster.
+**A tiny robot, a moonlit canyon, and an endlessly long delivery route.** Moonlit Courier is an endless runner made with HTML, CSS, and JavaScript. Play it in a browser or launch the standalone Windows desktop edition. Guide Pip past glowing crystals, old relay towers, and flying moon-moth drones as the route gets faster.
+
 
 
 ## Features
@@ -29,7 +30,34 @@ python -m http.server 8000
 
 Then visit <http://localhost:8000>.
 
-No package installation, build step, framework, or external art assets are required.
+The browser edition requires no build step or external art assets. The Windows desktop edition packages its own Electron/Chromium runtime and game files, so players do not need Chrome, a browser, or a separate runtime installed.
+
+## Windows desktop application
+
+This project can be packaged as a **single, portable Windows x64 `.exe`**. Double-click the executable to play; it does not install the game and does not need an internet connection at runtime.
+
+### Build the portable executable
+
+Building requires Node.js and npm on the developer's machine. From the project directory, run:
+
+```bash
+npm install
+npm run dist:win
+```
+
+The packaged app is written to:
+
+```text
+dist/Moonlit Courier-1.0.0-Windows-Portable.exe
+```
+
+Share that `.exe` with Windows x64 users. The build downloads Electron and packaging tools as development dependencies; these are bundled into the portable executable and are not required by players. The application loads the local game files only; it does not fetch game assets or services from the network. The executable is unsigned, so Windows SmartScreen may show its standard warning for an unrecognized publisher.
+
+For local development of the desktop edition:
+
+```bash
+npm start
+```
 
 ## Controls
 
@@ -63,8 +91,12 @@ The game uses axis-aligned rectangle overlap checks. Pip’s grounded duck pose 
 .
 ├── index.html   # Page markup, HUD, game canvas, and start/game-over overlay
 ├── style.css    # Responsive layout, colors, typography, and interface styling
-├── game.js      # Game loop, input, physics, spawning, collision, and canvas art
-└── README.md    # Project guide
+├── game.js          # Game loop, input, physics, spawning, collision, and canvas art
+├── electron/
+│   └── main.cjs      # Secure desktop window and application lifecycle
+├── package.json      # Electron development and Windows packaging scripts
+├── .gitignore        # Excludes build output and installed dependencies
+└── README.md         # Project guide
 ```
 
 The canvas uses a fixed logical resolution of **960 × 360** and is scaled by CSS. All game art is drawn in `game.js` with canvas shapes, preserving crisp pixel edges without image downloads.
@@ -87,5 +119,6 @@ The best score is stored under `moonlit-courier-best-v1` in `localStorage`. Clea
 - CSS
 - Vanilla JavaScript
 - Canvas 2D API
+- Electron (Windows desktop wrapper and bundled Chromium runtime)
 
-There is no server-side component. The local server command above is optional and is only useful when you prefer to run the project over HTTP.
+There is no server-side component. The local server command above is optional and is only useful when you prefer to run the browser edition over HTTP. The packaged desktop app renders the same local HTML/CSS/JavaScript game and runs offline.
