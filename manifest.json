@@ -1,0 +1,26 @@
+{
+  "id": "./",
+  "name": "Moonlit Courier — Pixel Runner",
+  "short_name": "Moonlit Courier",
+  "description": "Guide Pip through a moonlit canyon in this pixel-art endless runner.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#111427",
+  "theme_color": "#171b35",
+  "icons": [
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

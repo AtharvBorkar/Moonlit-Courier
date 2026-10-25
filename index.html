@@ -2,8 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#171b35">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Moonlit Courier">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="./icons/icon-192.png">
   <title>Moonlit Courier — Pixel Runner</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -21,7 +28,8 @@
     </header>
 
     <section class="game-frame" aria-label="Endless runner game">
-      <canvas id="game" width="960" height="360" aria-label="A tiny robot runs through a moonlit alien canyon. Press Space to jump over the crystals." role="img"></canvas>
+      <canvas id="game" width="960" height="360" aria-label="A tiny robot runs through a moonlit alien canyon. Tap the right side to jump; hold the duck button on the left." role="img"></canvas>
+      <button class="touch-duck" id="touch-duck" type="button" aria-label="Hold to duck under flying drones">DUCK</button>
       <div class="screen" id="screen">
         <div class="screen-card">
           <div class="screen-icon" id="screen-icon" aria-hidden="true">✦</div>
@@ -36,9 +44,9 @@
 
     <footer class="footer">
       <span><i class="legend-dot"></i> A tiny courier, a very long route.</span>
-      <span class="controls"><kbd>SPACE</kbd> / <kbd>↑</kbd> jump <span class="divider">·</span> hold <kbd>↓</kbd> to duck / drop</span>
+      <span class="controls"><span class="keyboard-hint"><kbd>SPACE</kbd> / <kbd>↑</kbd> jump · hold <kbd>↓</kbd> to duck / drop</span><span class="touch-hint">TAP RIGHT TO JUMP · HOLD LEFT TO DUCK</span></span>
     </footer>
   </main>
-  <script src="game.js"></script>
+  <script src="./game.js"></script>
 </body>
 </html>

@@ -21,6 +21,9 @@
       "index.html",
       "style.css",
       "game.js",
+      "manifest.json",
+      "service-worker.js",
+      "icons/**",
       "package.json"
     ],
     "directories": {

@@ -3,6 +3,7 @@
 
   const canvas = document.querySelector('#game');
   const ctx = canvas.getContext('2d');
+  const duckButton = document.querySelector('#touch-duck');
   const scoreNode = document.querySelector('#score');
   const bestNode = document.querySelector('#best');
   const screen = document.querySelector('#screen');
@@ -34,6 +35,9 @@
   let spawnIn = 1.05;
   let clearPause = 0;
   let downHeld = false;
+  let keyboardDuckHeld = false;
+  let touchDuckHeld = false;
+  let touchDuckPointerId = null;
   let lastFrame = 0;
   let groundScroll = 0;
   let obstacles = [];
@@ -99,6 +103,10 @@
     spawnIn = 1.1;
     clearPause = 0;
     downHeld = false;
+    keyboardDuckHeld = false;
+    touchDuckHeld = false;
+    touchDuckPointerId = null;
+    duckButton.classList.remove('is-pressed');
     groundScroll = 0;
     running = true;
     setScreen('playing');
@@ -112,6 +120,10 @@
     player.vy = -660;
     player.duck = false;
     downHeld = false;
+    keyboardDuckHeld = false;
+    touchDuckHeld = false;
+    touchDuckPointerId = null;
+    duckButton.classList.remove('is-pressed');
     emit(player.x + 12, GROUND - 2, 5, 'dust');
   }
 
@@ -120,16 +132,22 @@
     player.vy = Math.max(player.vy, 470);
   }
 
-  function holdDuck() {
+  function setDuckInput(source, pressed) {
+    if (source === 'touch') touchDuckHeld = pressed;
+    else keyboardDuckHeld = pressed;
+    downHeld = keyboardDuckHeld || touchDuckHeld;
     if (!running) return;
-    downHeld = true;
-    if (player.grounded) player.duck = true;
-    else quickDrop();
+    if (player.grounded) player.duck = downHeld;
+    else if (pressed) quickDrop();
   }
 
-  function releaseDrop() {
+  function releaseAllDuckInputs() {
+    keyboardDuckHeld = false;
+    touchDuckHeld = false;
     downHeld = false;
     player.duck = false;
+    touchDuckPointerId = null;
+    duckButton.classList.remove('is-pressed');
   }
 
   function createObstacle() {
@@ -548,13 +566,43 @@
   }
 
   actionButton.addEventListener('click', () => beginRun(false));
-  screen.addEventListener('pointerdown', event => {
-    if (event.target === screen) startFromKeyboard();
+
+  function isInteractiveTarget(target) {
+    return target instanceof Element && Boolean(target.closest('button, a, input, select, textarea'));
+  }
+
+  window.addEventListener('pointerdown', event => {
+    if (isInteractiveTarget(event.target)) return;
+    if (event.pointerType === 'touch') {
+      event.preventDefault();
+      if (event.clientX >= window.innerWidth / 2) {
+        startFromKeyboard();
+      } else if (event.clientY >= window.innerHeight * 0.56 && running) {
+        touchDuckPointerId = event.pointerId;
+        setDuckInput('touch', true);
+      }
+    } else if (event.pointerType === 'mouse' && event.target instanceof Element && event.target.closest('#game')) {
+      if (!running) beginRun(true);
+      else jump();
+    }
+  }, { passive: false });
+
+  duckButton.addEventListener('pointerdown', event => {
+    event.preventDefault();
+    touchDuckPointerId = event.pointerId;
+    duckButton.classList.add('is-pressed');
+    duckButton.setPointerCapture(event.pointerId);
+    setDuckInput('touch', true);
   });
-  canvas.addEventListener('pointerdown', () => {
-    if (!running) beginRun(true);
-    else jump();
-  });
+
+  function releaseTouchPointer(event) {
+    if (event.pointerId !== touchDuckPointerId) return;
+    touchDuckPointerId = null;
+    duckButton.classList.remove('is-pressed');
+    setDuckInput('touch', false);
+  }
+  window.addEventListener('pointerup', releaseTouchPointer);
+  window.addEventListener('pointercancel', releaseTouchPointer);
 
   window.addEventListener('keydown', event => {
     if (event.code === 'Space' || event.code === 'ArrowUp' || event.code === 'KeyW') {
@@ -562,13 +610,21 @@
       if (!event.repeat) startFromKeyboard();
     } else if (event.code === 'ArrowDown' || event.code === 'KeyS') {
       event.preventDefault();
-      if (!event.repeat) holdDuck();
+      if (!event.repeat) setDuckInput('keyboard', true);
     }
   });
   window.addEventListener('keyup', event => {
-    if (event.code === 'ArrowDown' || event.code === 'KeyS') releaseDrop();
+    if (event.code === 'ArrowDown' || event.code === 'KeyS') setDuckInput('keyboard', false);
   });
-  window.addEventListener('blur', releaseDrop);
+  window.addEventListener('blur', releaseAllDuckInputs);
+  window.addEventListener('touchmove', event => event.preventDefault(), { passive: false });
+  window.addEventListener('gesturestart', event => event.preventDefault(), { passive: false });
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./service-worker.js').catch(() => {});
+    });
+  }
 
   setScreen('ready');
   updateHud();
